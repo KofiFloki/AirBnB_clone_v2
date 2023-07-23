@@ -6,7 +6,7 @@ webservers
 from fabric.api import local, run, env, cd
 import os
 
-env.hosts = ['18.235.234.111', '100.25.181.230']
+env.hosts = ['54.197.207.34', '34.207.211.36']
 
 
 def clean_local(number=0):
