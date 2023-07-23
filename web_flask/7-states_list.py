@@ -1,31 +1,25 @@
 #!/usr/bin/python3
 """
-Starts Flask web application
-Web app listens on 0.0.0.0 port 5000
-/states_list page included
+starts a Flask web application
 """
-from models import *
-from models.state import State
-from flask import Flask, render_template
-from os import getenv
 
+from flask import Flask, render_template
+from models import *
+from models import storage
 app = Flask(__name__)
-app.url_map.strict_slashes = False
+
+
+@app.route('/states_list', strict_slashes=False)
+def states_list():
+    """display a HTML page with the states listed in alphabetical order"""
+    states = sorted(list(storage.all("State").values()), key=lambda x: x.name)
+    return render_template('7-states_list.html', states=states)
 
 
 @app.teardown_appcontext
 def teardown_db(exception):
-    """After each request, remove the current session"""
+    """closes the storage on teardown"""
     storage.close()
 
-@app.route('/states_list')
-def states_list():
-    """displays a HTML page with the list of all
-    states objects"""
-    sorted_states = [s for s in storage.all(State).values()]
-
-    return render_template('7-state_list.html', states=sorted_states)
-
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port='5000')
